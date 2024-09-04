@@ -15,8 +15,9 @@ public static class Identificador
 
     public static string Novo()
     {
+        int timestamp = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         int limite = 10;
-        var identificador = sqids.Encode(NumeroAleatorio, NumeroAleatorio, NumeroAleatorio);
+        var identificador = sqids.Encode(NumeroAleatorio, NumeroAleatorio, timestamp);
         if(identificador.Length > limite)
         {
             return identificador[..limite];
