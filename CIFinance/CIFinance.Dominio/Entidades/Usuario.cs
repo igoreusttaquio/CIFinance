@@ -16,7 +16,7 @@ public class Usuario : Padrao
     [MaxLength(124)]
     public string HashSenha { get; private set; } = string.Empty;
     public byte[] SaltoSenha { get; private set; } = new byte[16];
-    public DateTime UtilimoLogin { get; private set; } = DateTime.Now;
+    public DateTime UltimoLogin { get; private set; } = DateTime.Now;
 
     protected Usuario() { } // requerido pelo entity framework
 
