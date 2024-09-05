@@ -16,6 +16,8 @@ public class Transacao : Entidade
 
     [Required]
     public decimal Valor { get; private set; } = 0m;
+    
+    [Required]
     public DateTime Data { get; private set; } = DateTime.UtcNow;
 
     [Required]
