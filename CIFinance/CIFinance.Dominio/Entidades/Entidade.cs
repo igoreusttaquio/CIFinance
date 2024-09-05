@@ -2,7 +2,7 @@
 
 namespace CIFinance.Dominio.Entidades;
 
-public abstract class Padrao
+public abstract class Entidade
 {
     public int Id { get; protected set; }
     public DateTime Criacao { get; protected set; } = DateTime.UtcNow;
