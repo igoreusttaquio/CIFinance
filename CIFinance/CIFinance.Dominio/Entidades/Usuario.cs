@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CIFinance.Dominio.Entidades;
 [Table("Usuarios")]
-public class Usuario : Padrao
+public class Usuario : Entidade
 {
     [Required]
     [StringLength(maximumLength: 100, MinimumLength = 3)]
     public string Nome { get; private set; } = string.Empty;
-    [EmailAddress]
     [Required]
+    [EmailAddress]
     [MaxLength(100)]
     public string Email { get; private set; } = string.Empty;
 

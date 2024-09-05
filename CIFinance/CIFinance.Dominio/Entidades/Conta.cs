@@ -5,12 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace CIFinance.Dominio.Entidades;
 
 [Table("Contas")]
-public class Conta : Padrao
+public class Conta : Entidade
 {
+    [Required]
     [MaxLength(100)]
-    public string Nome { get; private set; } = string.Empty;
+    public string Nome { get; private set; } = null!;
     public decimal Saldo { get; private set; }
-    public Usuario? Usuario { get; private set; }
+    public Usuario Usuario { get; private set; } = null!;
 
     protected Conta() { }// Requerido por causa do entity framework
     public override void Atualizar<TEntidade>(TEntidade entidade)
