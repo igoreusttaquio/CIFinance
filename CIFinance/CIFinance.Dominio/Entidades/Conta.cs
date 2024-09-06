@@ -14,6 +14,13 @@ public class Conta : Entidade
     public Usuario Usuario { get; private set; } = null!;
 
     protected Conta() { }// Requerido por causa do entity framework
+    public Conta(string nome, decimal saldo, Usuario)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(nome, nameof(nome));
+        Nome = nome;
+        Saldo = saldo;
+        Usuario = Usuario;
+    }
     public override void Atualizar<TEntidade>(TEntidade entidade)
     {
         if (entidade is Conta conta)
