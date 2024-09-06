@@ -7,4 +7,5 @@ public interface IRepositorioEntidade<TEntidade>
     Task Excluir(TEntidade entidade);
     Task<IEntidade?> Obter(string idExterno);
     Task<ICollection<TEntidade>?> Obter();
+    Task Salvar();
 }
