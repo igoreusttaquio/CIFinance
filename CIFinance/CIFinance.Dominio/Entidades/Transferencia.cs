@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CIFinance.Dominio.Excecoes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CIFinance.Dominio.Entidades;
@@ -44,6 +45,6 @@ public class Transferencia : Entidade
             Descricao = transferencia.Descricao;
         }
         else
-            throw new ArgumentException("Entidade especificada nao e do tipo Transferencia", nameof(entidade));
+            throw new EntidadeInvalidaExcecao("Entidade especificada nao e do tipo Transferencia", nameof(entidade));
     }
 }

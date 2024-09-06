@@ -1,4 +1,5 @@
 ﻿using CIFinance.Dominio.Enumeradores;
+using CIFinance.Dominio.Excecoes;
 using CIFinance.Dominio.Extensoes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -56,6 +57,6 @@ public class Transacao : Entidade
             Data = transacao.Data;
         }
         else
-            throw new NotImplementedException();
+            throw new EntidadeInvalidaExcecao("Entidade especificada nao e do tipo Transacao", nameof(entidade));
     }
 }

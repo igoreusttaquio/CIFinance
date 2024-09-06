@@ -14,12 +14,12 @@ public class Conta : Entidade
     public Usuario Usuario { get; private set; } = null!;
 
     protected Conta() { }// Requerido por causa do entity framework
-    public Conta(string nome, decimal saldo, Usuario)
+    public Conta(string nome, decimal saldo, Usuario usuario)
     {
         ArgumentException.ThrowIfNullOrEmpty(nome, nameof(nome));
         Nome = nome;
         Saldo = saldo;
-        Usuario = Usuario;
+        Usuario = usuario;
     }
     public override void Atualizar<TEntidade>(TEntidade entidade)
     {
@@ -28,8 +28,8 @@ public class Conta : Entidade
             Nome = conta.Nome;
             Saldo = conta.Saldo;
         }
-
-        throw new NotImplementedException();
+        else
+            throw new EntidadeInvalidaExcecao("Entidade especificada nao e do tipo Conta", nameof(entidade));
     }
 
     public void Depositar(decimal valor)
@@ -41,7 +41,7 @@ public class Conta : Entidade
     {
         if (valor > Saldo)
         {
-            throw new ExcecaoSaque("Valor insuficiente para saque.");
+            throw new SaqueInvalidoExcecao("Valor insuficiente para saque.");
         }
 
         Saldo -= valor;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using CIFinance.Dominio.Excecoes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CIFinance.Dominio.Entidades;
 
@@ -17,12 +18,12 @@ public class Orcamento : Entidade
     {
         if (dataInicio > DateTime.Today)
         {
-            throw new ArgumentException("Data informada inválida.");
+            throw new DataInvalidaExcecao("Data informada inválida.");
         }
 
         if (dataFim > dataInicio)
         {
-            throw new ArgumentException("A data de início não pode ser menor que a data de fim.");
+            throw new DataInvalidaExcecao("A data de início não pode ser menor que a data de fim.");
         }
 
         Usuario = usuario;
@@ -43,6 +44,6 @@ public class Orcamento : Entidade
             Descricao = orcamento.Descricao;
         }
         else
-            throw new ArgumentException("Entidade especificada nao e do tipo Orcamento", nameof(entidade));
+            throw new EntidadeInvalidaExcecao("Entidade especificada nao e do tipo Orcamento", nameof(entidade));
     }
 }

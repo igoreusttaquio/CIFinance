@@ -1,4 +1,5 @@
 ﻿using CIFinance.Dominio.Enumeradores;
+using CIFinance.Dominio.Excecoes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -34,6 +35,6 @@ public class Categoria : Entidade
             Tipo = categoria.Tipo;
         }
         else
-            throw new ArgumentException("Entidade especificada nao e do tipo Categoria", nameof(entidade));
+            throw new EntidadeInvalidaExcecao("Entidade especificada nao e do tipo Categoria", nameof(entidade));
     }
 }

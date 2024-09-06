@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CIFinance.Dominio.Abstracoes;
+using System.ComponentModel.DataAnnotations;
 
 namespace CIFinance.Dominio.Entidades;
 
-public abstract class Entidade
+public abstract class Entidade : IEntidade
 {
     public int Id { get; protected set; }
     public DateTime Criacao { get; protected set; } = DateTime.UtcNow;

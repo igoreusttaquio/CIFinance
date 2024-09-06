@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CIFinance.Dominio.Excecoes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CIFinance.Dominio.Entidades;
@@ -16,7 +17,7 @@ public class Usuario : Entidade
     [MaxLength(124)]
     public string HashSenha { get; private set; } = string.Empty;
     public byte[] SaltoSenha { get; private set; } = new byte[16];
-    public DateTime UltimoLogin { get; private set; } = DateTime.Now;
+    public DateTime UltimoLogin { get; private set; } = DateTime.UtcNow;
 
     protected Usuario() { } // requerido pelo entity framework
 
@@ -37,8 +38,24 @@ public class Usuario : Entidade
         Nome = nome;
         Email = email;
     }
+
+    public void AtualizarDataDeUltimoLogin()
+    {
+        UltimoLogin = DateTime.UtcNow;
+    }
     public override void Atualizar<TEntidade>(TEntidade entidade)
     {
-        throw new NotImplementedException();
+
+        if (entidade is Usuario usuario)
+        {
+            Nome = usuario.Nome;
+            if (HashSenha != usuario.HashSenha)
+            {
+                HashSenha = usuario.HashSenha;
+                SaltoSenha = usuario.SaltoSenha;
+            }
+        }
+        else
+            throw new EntidadeInvalidaExcecao("Entidade especificada nao e do tipo Usuario", nameof(entidade));
     }
 }
