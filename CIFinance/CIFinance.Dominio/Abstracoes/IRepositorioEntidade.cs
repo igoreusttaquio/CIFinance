@@ -6,4 +6,5 @@ public interface IRepositorioEntidade
     void Atualizar(IEntidade entidade);
     void Excluir(IEntidade entidade);
     IEntidade? Obter(IEntidade entidade);
+    ICollection<IEntidade?> Obter();
 }
