@@ -5,13 +5,13 @@ using CIFinance.Dominio.Entidades;
 
 namespace CIFinance.Aplicacao.Servicos;
 
-internal class UsuarioServico(IServicoSenha servicoSenha, IRepositorioEntidade<Usuario> repositorio) : IServicoCrud<UsuarioDTO>, IServicoUsuario
+internal class UsuarioServico(IServicoSenha servicoSenha, IRepositorioEntidade<Usuario> repositorio) : IServicoCrudUsuario<UsuarioDTO>, IServicoUsuario
 {
 
     public IServicoSenha ServicoSenha => servicoSenha;
     private readonly IRepositorioEntidade<Usuario> _repositorioUsuario = repositorio;
 
-    async Task<ServicoResposta<bool>> Atualizar(UsuarioDTO dto, string uidUsuario)
+    public async Task<ServicoResposta<bool>> Atualizar(UsuarioDTO dto, string uidUsuario)
     {
         var resposta = new ServicoResposta<bool>(true);
         if (dto?.IdentificadorExterno is null)
@@ -49,7 +49,7 @@ internal class UsuarioServico(IServicoSenha servicoSenha, IRepositorioEntidade<U
         return resposta;
     }
 
-    async Task<ServicoResposta<bool>> Criar(UsuarioDTO dto, string uidUsuario)
+    public async Task<ServicoResposta<bool>> Criar(UsuarioDTO dto)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(dto?.Senha);
         ArgumentException.ThrowIfNullOrEmpty(dto?.Senha);
@@ -68,11 +68,10 @@ internal class UsuarioServico(IServicoSenha servicoSenha, IRepositorioEntidade<U
         {
             resposta.ComErro(e.Message);
         }
-
         return resposta;
     }
 
-    public async Task<ServicoResposta<UsuarioDTO?>> Obter(string uidExterno, string uidUsuario)
+    public async Task<ServicoResposta<UsuarioDTO?>> Obter(string uidExterno)
     {
         var resposta = new ServicoResposta<UsuarioDTO?>(null);
         try
@@ -85,7 +84,7 @@ internal class UsuarioServico(IServicoSenha servicoSenha, IRepositorioEntidade<U
                     IdentificadorExterno = usuario.IdentificadorExterno,
                     Nome = usuario.Nome
                 };
-                
+
                 resposta.ComSucesso(dto);
             }
 
@@ -98,14 +97,47 @@ internal class UsuarioServico(IServicoSenha servicoSenha, IRepositorioEntidade<U
         return resposta;
     }
 
-    public Task<ServicoResposta<IEnumerable<UsuarioDTO>?>> ObterTodos(string uidUsuario)
+    public async Task<ServicoResposta<IEnumerable<UsuarioDTO?>>> ObterTodos()
     {
-        throw new NotImplementedException();
+        var resposta = new ServicoResposta<IEnumerable<UsuarioDTO?>>([]);
+        try
+        {
+            if (await _repositorioUsuario.ObterTodosAsync() is IEnumerable<Usuario> usuarios)
+            {
+                var mapeados = usuarios.ToList()
+                    .ConvertAll(u =>
+                    new UsuarioDTO { Email = u.Email, Nome = u.Nome, IdentificadorExterno = u.IdentificadorExterno });
+                resposta.ComSucesso(mapeados);
+            }
+
+        }
+        catch (Exception e)
+        {
+            resposta.ComErro(e.Message);
+        }
+
+        return resposta;
     }
 
-    public Task<ServicoResposta<bool>> Remover(UsuarioDTO dto)
+    public async Task<ServicoResposta<bool>> Remover(string uidUsuario)
     {
-        throw new NotImplementedException();
+        var resposta = new ServicoResposta<bool>(true);
+        try
+        {
+            if (await _repositorioUsuario.ObterAsync(uidUsuario) is Usuario usuario)
+            {
+                await _repositorioUsuario.ExcluirAsync(usuario);
+                resposta.ComSucesso();
+            }
+            else
+                resposta.ComErro("Usuario nao encontrado");
+        }
+        catch (Exception e)
+        {
+            resposta.ComErro(e.Message);
+        }
+
+        return resposta;
     }
 
     public bool ValidarSenha(string senhaFornecida, string hashSenhaUsuario, byte[] saltoSenha)

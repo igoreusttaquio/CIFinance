@@ -43,7 +43,7 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : ISe
         return resposta;
     }
 
-    public async Task<ServicoResposta<bool>> Criar(CategoriaDTO dto, string uidUsuario)
+    public async Task<ServicoResposta<bool>> Criar(CategoriaDTO dto, string identificadorExterno)
     {
         var resposta = new ServicoResposta<bool>(true);
 
@@ -62,12 +62,12 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : ISe
         return resposta;
     }
 
-    public async Task<ServicoResposta<CategoriaDTO?>> Obter(string uidExterno, string uidUsuario)
+    public async Task<ServicoResposta<CategoriaDTO?>> Obter(string identificadorExterno, string uidUsuario)
     {
         var resposta = new ServicoResposta<CategoriaDTO?>(null);
         try
         {
-            var resultado = await _repositorio.ObterAsync(uidExterno);
+            var resultado = await _repositorio.ObterAsync(identificadorExterno);
             if (resultado is Categoria categoria)
             {
                 var mapeado = new CategoriaDTO
@@ -92,12 +92,12 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : ISe
         return resposta;
     }
 
-    public Task<ServicoResposta<IEnumerable<CategoriaDTO>?>> ObterTodos(string uidUsuario)
+    public Task<ServicoResposta<IEnumerable<CategoriaDTO?>>> ObterTodos(string uidUsuario)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ServicoResposta<bool>> Remover(CategoriaDTO dto)
+    public Task<ServicoResposta<bool>> Remover(string uidExterno, string uidUsuario)
     {
         throw new NotImplementedException();
     }
