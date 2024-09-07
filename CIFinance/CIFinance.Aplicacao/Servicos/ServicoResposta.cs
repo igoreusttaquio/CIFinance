@@ -1,10 +1,10 @@
 ﻿namespace CIFinance.Aplicacao.Servicos;
 
-public class ServicoResposta<T>
+public class ServicoResposta<T>(T dados, bool sucesso = true, string? mensagem = null)
 {
-    public T Dados { get; private set; }
-    public bool Sucesso { get; private set; } = true;
-    public string? Mensagem { get; private set; }
+    public T Dados { get; private set; } = dados;
+    public bool Sucesso { get; private set; } = sucesso;
+    public string? Mensagem { get; private set; } = mensagem;
 
     public void ComErro(string mensagem)
     {
@@ -15,6 +15,12 @@ public class ServicoResposta<T>
     public void ComSucesso(T dados, string? mensagem = null)
     {
         Dados = dados;
+        ComSucesso(mensagem);
+    }
+
+    public void ComSucesso(string? mensagem = null)
+    {
         Mensagem = mensagem;
+        Sucesso = true;
     }
 }

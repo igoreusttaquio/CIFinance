@@ -8,37 +8,37 @@ namespace CIFinance.Infra.Repositorio;
 public class CategoriaRepositorio(BDContexto bdContexto) : IRepositorioEntidade<Categoria>
 {
     private readonly BDContexto _bancoDados = bdContexto;
-    public async Task Atualizar(Categoria entidade)
+    public async Task AtualizarAsync(Categoria entidade)
     {
         _bancoDados.Categorias.Attach(entidade);
         _bancoDados.Entry(entidade).State = EntityState.Modified;
         _bancoDados.Categorias.Update(entidade);
-        await Salvar();
+        await SalvarAsync();
     }
 
-    public async Task Criar(Categoria entidade)
+    public async Task CriarAsync(Categoria entidade)
     {
         await _bancoDados.Categorias.AddAsync(entidade);
-        await Salvar();
+        await SalvarAsync();
     }
 
-    public async Task Excluir(Categoria entidade)
+    public async Task ExcluirAsync(Categoria entidade)
     {
         _bancoDados.Categorias.Remove(entidade);
-        await Salvar();
+        await SalvarAsync();
     }
 
-    public async Task<IEntidade?> Obter(string idExterno)
+    public async Task<IEntidade?> ObterAsync(string idExterno)
     {
         return await _bancoDados.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.IdentificadorExterno == idExterno);
     }
 
-    public async Task<ICollection<Categoria>?> ObterTodos()
+    public async Task<ICollection<Categoria>?> ObterTodosAsync()
     {
         return await _bancoDados.Categorias.AsNoTracking().ToListAsync();
     }
 
-    public async Task Salvar()
+    public async Task SalvarAsync()
     {
         await _bancoDados.SaveChangesAsync();
     }

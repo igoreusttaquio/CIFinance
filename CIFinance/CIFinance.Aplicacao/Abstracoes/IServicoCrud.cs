@@ -3,11 +3,11 @@ using CIFinance.Aplicacao.Servicos;
 
 namespace CIFinance.Aplicacao.Abstracoes;
 
-public interface IServico<TDto>
+public interface IServicoCrud<TDto>
 {
-    Task Criar(TDto dto, string uidUsuario);
+    Task<ServicoResposta<bool>> Criar(TDto dto, string uidUsuario);
     Task<ServicoResposta<IEnumerable<TDto>?>> ObterTodos(string uidUsuario);
     Task<ServicoResposta<TDto?>> Obter(string uidExterno, string uidUsuario);
-    Task Atualizar(TDto dto, string uidUsuario);
-    Task Remover(TDto dto);
+    Task<ServicoResposta<bool>> Atualizar(TDto dto, string uidUsuario);
+    Task<ServicoResposta<bool>> Remover(TDto dto);
 }

@@ -7,38 +7,67 @@ using CIFinance.Dominio.Extensoes;
 
 namespace CIFinance.Aplicacao.Servicos;
 
-public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : IServico<CategoriaDTO>
+public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : IServicoCrud<CategoriaDTO>
 {
     IRepositorioEntidade<Categoria> _repositorio = repositorio;
 
-    public async Task Atualizar(CategoriaDTO dto, string uidUsuario)
+    public async Task<ServicoResposta<bool>> Atualizar(CategoriaDTO dto, string uidUsuario)
     {
+        var resposta = new ServicoResposta<bool>(true);
         if (dto?.IdentificadorExterno is null)
         {
-            return;
+            resposta.ComErro("Idetificador de usuario invalido");
+            return resposta;
         }
 
-        if (await _repositorio.Obter(dto.IdentificadorExterno) is Categoria categoria)
+        try
         {
-            var temp = new Categoria(dto.Nome, dto.Tipo.ParaEnum<Tipo>(), categoria.Usuario);
-            categoria.Atualizar(temp);
-            await _repositorio.Atualizar(categoria);
+            if (await _repositorio.ObterAsync(dto.IdentificadorExterno) is Categoria categoria)
+            {
+                var temp = new Categoria(dto.Nome, dto.Tipo.ParaEnum<Tipo>(), categoria.Usuario);
+                categoria.Atualizar(temp);
+                await _repositorio.AtualizarAsync(categoria);
+
+                resposta.ComSucesso(true);
+            }
+            else
+            {
+                resposta.ComErro("Categoria nao encontrada");
+            }
         }
+        catch (Exception e)
+        {
+            resposta.ComErro(e.Message);
+        }
+
+        return resposta;
     }
 
-    public async Task Criar(CategoriaDTO dto, string uidUsuario)
+    public async Task<ServicoResposta<bool>> Criar(CategoriaDTO dto, string uidUsuario)
     {
-        var u = new Usuario("Igor", "igoreusttaquio@gmail.com");
-        var categoria = new Categoria(dto.Nome, dto.Tipo.ParaEnum<Tipo>(), u);
-        await _repositorio.Criar(categoria);
+        var resposta = new ServicoResposta<bool>(true);
+
+        try
+        {
+            var u = new Usuario("Igor", "igoreusttaquio@gmail.com");
+            var categoria = new Categoria(dto.Nome, dto.Tipo.ParaEnum<Tipo>(), u);
+            await _repositorio.CriarAsync(categoria);
+
+            resposta.ComSucesso(true);
+        }
+        catch (Exception e)
+        {
+            resposta.ComErro(e.Message);
+        }
+        return resposta;
     }
 
     public async Task<ServicoResposta<CategoriaDTO?>> Obter(string uidExterno, string uidUsuario)
     {
-        var resposta = new ServicoResposta<CategoriaDTO?>();
+        var resposta = new ServicoResposta<CategoriaDTO?>(null);
         try
         {
-            var resultado = await _repositorio.Obter(uidExterno);
+            var resultado = await _repositorio.ObterAsync(uidExterno);
             if (resultado is Categoria categoria)
             {
                 var mapeado = new CategoriaDTO
@@ -68,7 +97,7 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : ISe
         throw new NotImplementedException();
     }
 
-    public Task Remover(CategoriaDTO dto)
+    public Task<ServicoResposta<bool>> Remover(CategoriaDTO dto)
     {
         throw new NotImplementedException();
     }
