@@ -22,7 +22,7 @@ public class SenhaServico : IServicoSenha
     {
         return Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password: senha!,
-            salt: salto,
+            salt: saltoSenha,
             prf: KeyDerivationPrf.HMACSHA256,
             iterationCount: 100000,
             numBytesRequested: 256 / 8));
