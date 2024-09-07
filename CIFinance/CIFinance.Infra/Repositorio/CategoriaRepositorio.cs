@@ -33,7 +33,7 @@ public class CategoriaRepositorio(BDContexto bdContexto) : IRepositorioEntidade<
         return await _bancoDados.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.IdentificadorExterno == idExterno);
     }
 
-    public async Task<ICollection<Categoria>?> Obter()
+    public async Task<ICollection<Categoria>?> ObterTodos()
     {
         return await _bancoDados.Categorias.AsNoTracking().ToListAsync();
     }

@@ -8,10 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CIFinance.Dominio\CIFinance.Dominio.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Servicos\" />
+    <ProjectReference Include="..\CIFinance.Infra\CIFinance.Infra.csproj" />
   </ItemGroup>
 
 </Project>
