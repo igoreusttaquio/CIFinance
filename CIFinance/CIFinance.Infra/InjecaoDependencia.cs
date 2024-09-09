@@ -14,6 +14,7 @@ public static class InjecaoDependencia
         
         servicos.AddScoped<IRepositorioEntidade<Categoria>, CategoriaRepositorio>();
         servicos.AddScoped<IRepositorioEntidade<Usuario>, UsuarioRepositorio>();
+        servicos.AddScoped<IRepositorioEntidade<Conta>, ContaRepositorio>();
 
         servicos.AddDbContext<BDContexto>(
         (sp, options) => options
