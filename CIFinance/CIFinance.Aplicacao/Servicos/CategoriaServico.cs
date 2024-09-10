@@ -128,8 +128,24 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorioCategor
         return resposta;
     }
 
-    public Task<ServicoResposta<bool>> Remover(string uidExterno, string uidUsuario)
+    public async Task<ServicoResposta<bool>> Remover(string uidExterno, string uidUsuario)
     {
-        throw new NotImplementedException();
+        var resposta = new ServicoResposta<bool>(true);
+        try
+        {
+            if (await _repositorioCategoria.ObterAsync(uidExterno) is Categoria categoria && categoria.Usuario.IdentificadorExterno == uidUsuario)
+            {
+                await _repositorioCategoria.ExcluirAsync(categoria);
+                resposta.ComSucesso("Categoria removida.");
+            }
+            else
+                resposta.ComErro("Categoria nao encontrada.");
+        }
+        catch (Exception e)
+        {
+            resposta.ComErro(e.Message);
+        }
+
+        return resposta;
     }
 }
