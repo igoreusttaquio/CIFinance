@@ -28,7 +28,7 @@ public class CategoriaRepositorio(BDContexto bdContexto) : IRepositorioEntidade<
         await SalvarAsync();
     }
 
-    public async Task<IEntidade?> ObterAsync(string idExterno)
+    public async Task<Categoria?> ObterAsync(string idExterno)
     {
         return await _bancoDados.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.IdentificadorExterno == idExterno);
     }

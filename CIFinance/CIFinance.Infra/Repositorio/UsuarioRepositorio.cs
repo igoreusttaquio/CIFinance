@@ -30,7 +30,7 @@ internal class UsuarioRepositorio(BDContexto contexto) : IRepositorioEntidade<Us
         await SalvarAsync();
     }
 
-    public async Task<IEntidade?> ObterAsync(string idExterno)
+    public async Task<Usuario?> ObterAsync(string idExterno)
     {
         return await _bdContexto.Usuarios.AsNoTracking().FirstOrDefaultAsync(u => u.IdentificadorExterno == idExterno);
     }

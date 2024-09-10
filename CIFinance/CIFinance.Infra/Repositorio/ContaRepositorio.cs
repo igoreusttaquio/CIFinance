@@ -30,7 +30,7 @@ public class ContaRepositorio(BDContexto dbContexto) : IRepositorioEntidade<Cont
 
     }
 
-    public async Task<IEntidade?> ObterAsync(string idExterno)
+    public async Task<Conta?> ObterAsync(string idExterno)
     {
         return await _bancoDados.Contas.AsNoTracking().FirstOrDefaultAsync(contas=> contas.IdentificadorExterno == idExterno);
     }
