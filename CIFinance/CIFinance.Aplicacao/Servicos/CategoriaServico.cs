@@ -7,9 +7,10 @@ using CIFinance.Dominio.Extensoes;
 
 namespace CIFinance.Aplicacao.Servicos;
 
-public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : IServicoCrud<CategoriaDTO>
+public class CategoriaServico(IRepositorioEntidade<Categoria> repositorioCategoria, IRepositorioEntidade<Usuario> repositorioUsuario) : IServicoCrud<CategoriaDTO>
 {
-    IRepositorioEntidade<Categoria> _repositorio = repositorio;
+    readonly IRepositorioEntidade<Categoria> _repositorioCategoria = repositorioCategoria;
+    readonly IRepositorioEntidade<Usuario> _repositorioUsuario = repositorioUsuario;
 
     public async Task<ServicoResposta<bool>> Atualizar(CategoriaDTO dto, string uidUsuario)
     {
@@ -22,11 +23,11 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : ISe
 
         try
         {
-            if (await _repositorio.ObterAsync(dto.IdentificadorExterno) is Categoria categoria)
+            if (await _repositorioCategoria.ObterAsync(dto.IdentificadorExterno) is Categoria categoria)
             {
                 var temp = new Categoria(dto.Nome, dto.Tipo.ParaEnum<Tipo>(), categoria.Usuario);
                 categoria.Atualizar(temp);
-                await _repositorio.AtualizarAsync(categoria);
+                await _repositorioCategoria.AtualizarAsync(categoria);
 
                 resposta.ComSucesso(true);
             }
@@ -43,17 +44,23 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : ISe
         return resposta;
     }
 
-    public async Task<ServicoResposta<bool>> Criar(CategoriaDTO dto, string identificadorExterno)
+    public async Task<ServicoResposta<bool>> Criar(CategoriaDTO dto, string uidUsuario)
     {
         var resposta = new ServicoResposta<bool>(true);
 
         try
         {
-            var u = new Usuario("Igor", "igoreusttaquio@gmail.com");
-            var categoria = new Categoria(dto.Nome, dto.Tipo.ParaEnum<Tipo>(), u);
-            await _repositorio.CriarAsync(categoria);
+            if (await _repositorioUsuario.ObterAsync(uidUsuario) is Usuario usuario)
+            {
+                var categoria = new Categoria(dto.Nome, dto.Tipo.ParaEnum<Tipo>(), usuario);
+                await _repositorioCategoria.CriarAsync(categoria);
 
-            resposta.ComSucesso(true);
+                resposta.ComSucesso(true);
+            }
+            else
+            {
+                resposta.ComErro("Nao e possivel criar uma categoria sem usuario.");
+            }
         }
         catch (Exception e)
         {
@@ -67,17 +74,23 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : ISe
         var resposta = new ServicoResposta<CategoriaDTO?>(null);
         try
         {
-            var resultado = await _repositorio.ObterAsync(identificadorExterno);
+            var resultado = await _repositorioCategoria.ObterAsync(identificadorExterno);
             if (resultado is Categoria categoria)
             {
-                var mapeado = new CategoriaDTO
+                if (categoria.Usuario.IdentificadorExterno == uidUsuario)
                 {
-                    IdentificadorExterno = categoria.IdentificadorExterno,
-                    Nome = categoria.Nome,
-                    Tipo = categoria.Tipo
-                };
-
-                resposta.ComSucesso(mapeado);
+                    var mapeado = new CategoriaDTO
+                    {
+                        IdentificadorExterno = categoria.IdentificadorExterno,
+                        Nome = categoria.Nome,
+                        Tipo = categoria.Tipo
+                    };
+                    resposta.ComSucesso(mapeado);
+                }
+                else
+                {
+                    resposta.ComErro("Categoria nao encontrada.");
+                }
             }
         }
         catch (ArgumentException e)
@@ -92,9 +105,27 @@ public class CategoriaServico(IRepositorioEntidade<Categoria> repositorio) : ISe
         return resposta;
     }
 
-    public Task<ServicoResposta<IEnumerable<CategoriaDTO?>>> ObterTodos(string uidUsuario)
+    public async Task<ServicoResposta<IEnumerable<CategoriaDTO?>>> ObterTodos(string uidUsuario)
     {
-        throw new NotImplementedException();
+        var resposta = new ServicoResposta<IEnumerable<CategoriaDTO?>>([]);
+        try
+        {
+            if ((await _repositorioCategoria.ObterTodosAsync())?.Where(c => c.Usuario.IdentificadorExterno == uidUsuario) is IEnumerable<Categoria> categorias)
+            {
+                resposta.ComSucesso(categorias.ToList().ConvertAll(c => new CategoriaDTO
+                {
+                    IdentificadorExterno = c.IdentificadorExterno,
+                    Nome = c.Nome,
+                    Tipo = c.Tipo
+                }));
+            }
+        }
+        catch (Exception e)
+        {
+            resposta.ComErro(e.Message);
+        }
+
+        return resposta;
     }
 
     public Task<ServicoResposta<bool>> Remover(string uidExterno, string uidUsuario)
