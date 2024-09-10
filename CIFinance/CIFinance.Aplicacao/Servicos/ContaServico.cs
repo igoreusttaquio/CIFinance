@@ -2,13 +2,12 @@
 using CIFinance.Aplicacao.Dtos.Conta;
 using CIFinance.Dominio.Abstracoes;
 using CIFinance.Dominio.Entidades;
-using CIFinance.Infra.Repositorio;
 
 
 namespace CIFinance.Aplicacao.Servicos;
 
-public class ContaServico(IRepositorioEntidade<Conta>contaRepositorio, IRepositorioEntidade<Usuario>usuarioRepositorio) : IServicoCrud<ContaDTO>
-    
+public class ContaServico(IRepositorioEntidade<Conta> contaRepositorio, IRepositorioEntidade<Usuario> usuarioRepositorio) : IServicoCrud<ContaDTO>
+
 {
     private readonly IRepositorioEntidade<Conta> _contaRepositorio = contaRepositorio;
     private readonly IRepositorioEntidade<Usuario> _usuarioRepositorio = usuarioRepositorio;
@@ -21,27 +20,25 @@ public class ContaServico(IRepositorioEntidade<Conta>contaRepositorio, IReposito
             resposta.ComErro("Identidicador de Conta inválido.");
             return resposta;
         }
+
         try
         {
-            var conta = await _contaRepositorio.ObterAsync(dto.IdentificadorExterno);
-            if (conta is null)
+            if (await _contaRepositorio.ObterAsync(dto.IdentificadorExterno) is not Conta conta)
             {
                 resposta.ComErro("Conta não encontrada.");
+                return resposta;
             }
-            else
-            {
-                var DonoDaConta = await _usuarioRepositorio.ObterAsync(uidUsuario);
-                if (DonoDaConta is null)
-                {
-                    resposta.ComErro("Usuário não encontrado.");
-                    return resposta;
-                }
-                var ContaTemporaria = new Conta(dto.Nome, dto.Saldo, (Usuario)DonoDaConta);
-                conta.Atualizar(ContaTemporaria);
-                await _contaRepositorio.AtualizarAsync((Conta)conta);
-                resposta.ComSucesso(true);
 
+            if (await _usuarioRepositorio.ObterAsync(uidUsuario) is not Usuario donoDaConta)
+            {
+                resposta.ComErro("Usuário não encontrado.");
+                return resposta;
             }
+
+            var ContaTemporaria = new Conta(dto.Nome, dto.Saldo, donoDaConta);
+            conta.Atualizar(ContaTemporaria);
+            await _contaRepositorio.AtualizarAsync(conta);
+            resposta.ComSucesso(true);
         }
         catch (Exception e)
         {
@@ -56,14 +53,14 @@ public class ContaServico(IRepositorioEntidade<Conta>contaRepositorio, IReposito
 
         try
         {
-            if (await _usuarioRepositorio.ObterAsync(uidUsuario) is Usuario DonoDaConta)
+            if (await _usuarioRepositorio.ObterAsync(uidUsuario) is Usuario donoDaConta)
             {
-                if (DonoDaConta is null)
+                if (donoDaConta is null)
                 {
                     resposta.ComErro("Usuário não encontrado.");
                     return resposta;
                 }
-                var conta = new Conta(dto.Nome, dto.Saldo, DonoDaConta);
+                var conta = new Conta(dto.Nome, dto.Saldo, donoDaConta);
                 await _contaRepositorio.CriarAsync(conta);
                 resposta.ComSucesso(true);
             }

@@ -5,43 +5,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CIFinance.Infra.Repositorio;
 
-public class ContaRepositorio(BDContexto BancoDeDados) : IRepositorioEntidade<Conta>
+public class ContaRepositorio(BDContexto dbContexto) : IRepositorioEntidade<Conta>
 {
-    private readonly BDContexto bDContexto = BancoDeDados;
+    private readonly BDContexto _bancoDados = dbContexto;
 
     public async Task AtualizarAsync(Conta entidade)
     {
-        bDContexto.Contas.Attach(entidade);
-        bDContexto.Entry(entidade).State = EntityState.Modified;
-        bDContexto.Contas.Update(entidade);
+        _bancoDados.Contas.Attach(entidade);
+        _bancoDados.Entry(entidade).State = EntityState.Modified;
+        _bancoDados.Contas.Update(entidade);
         await SalvarAsync();
     }
 
     public async Task CriarAsync(Conta entidade)
     {
-        await bDContexto.Contas.AddAsync(entidade);
+        await _bancoDados.Contas.AddAsync(entidade);
         await SalvarAsync();
     }
 
     public async Task ExcluirAsync(Conta entidade)
     {
-        bDContexto.Contas.Remove(entidade);
+        _bancoDados.Contas.Remove(entidade);
         await SalvarAsync();
 
     }
 
     public async Task<IEntidade?> ObterAsync(string idExterno)
     {
-        return await bDContexto.Contas.AsNoTracking().FirstOrDefaultAsync(contas=> contas.IdentificadorExterno == idExterno);
+        return await _bancoDados.Contas.AsNoTracking().FirstOrDefaultAsync(contas=> contas.IdentificadorExterno == idExterno);
     }
 
     public async Task<ICollection<Conta>?> ObterTodosAsync()
     {
-        return await bDContexto.Contas.AsNoTracking().ToListAsync();
+        return await _bancoDados.Contas.AsNoTracking().ToListAsync();
     }
 
     public async Task SalvarAsync()
     {
-        await bDContexto.SaveChangesAsync();
+        await _bancoDados.SaveChangesAsync();
     }
 }
