@@ -17,7 +17,7 @@ public class Transacao : Entidade
 
     [Required]
     public decimal Valor { get; private set; } = 0m;
-    
+
     [Required]
     public DateTime Data { get; private set; } = DateTime.UtcNow;
 
@@ -28,7 +28,7 @@ public class Transacao : Entidade
 
     protected Transacao() { } // Requerido por causa do entity framework
 
-    public Transacao(Conta conta, Categoria categoria, string descricao, decimal valor, Tipo tipo, DateTime? data = default)
+    public Transacao(Conta conta, Categoria categoria, string descricao, decimal valor, Tipo tipo, DateTime? data = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(descricao, nameof(descricao));
         if (categoria.Tipo.ParaEnum<Tipo>() != tipo)
