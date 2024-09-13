@@ -21,9 +21,7 @@ public class CriarUsuarioComandoHandler(IRepositorioEntidade<Usuario> usuarioRep
         try
         {
             var hash = _servicoSenha.GerarHashSenha(request.Senha, out byte[] saltoSenha);
-            var novoUsuario = new Usuario(request.Nome, request.Email, hash, saltoSenha);
-
-            await _repositorioUsuario.CriarAsync(novoUsuario);
+            await _repositorioUsuario.CriarAsync(Usuario.Fabrica.Criar(request.Nome, request.Email, hash, saltoSenha));
             await _unidadeTrabalho.SalvarAsync();
 
             return (Resultado<bool, Erro>)true;
