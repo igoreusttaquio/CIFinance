@@ -2,12 +2,6 @@
 ## ESQUEMA GERAL DA ORGANIZACAO DA APLICACAO
 ![Alt Imagem esquema applicacao](https://github.com/igoreusttaquio/CIFinance/blob/e922445093297180202bb716a99696b53ebdf5e1/esquema-aplicacao.png)
 
-## Onde vai o que???
-- Dominio: Classes de negocio, entidades de banco de dados e abstracoes de dominio.
-- Aplicacao: Implementacao de abstracoes de dominio, casos de uso e abstracoes da camada de aplicacao.
-- Infra: Implementacao de abstracoes da camada de aplicacao, acesso a dados, conversao de objetos, implementacao de servicos e autenticacao.
-- WebAPI: Utilizacao das camadas adjacentes para expor informacoes para o mundo exterior.
-
 ## _Algumas frases inspiradoras para quando estiver saturado_
 > _"Aquele que é corajoso o suficiente para falhar pode alcançar grandes coisas." – Robert F. Kennedy_
 
