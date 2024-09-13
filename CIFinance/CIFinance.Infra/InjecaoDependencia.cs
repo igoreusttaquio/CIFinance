@@ -11,10 +11,11 @@ public static class InjecaoDependencia
     public static IServiceCollection AdicionarInfraestrutura(this IServiceCollection servicos, string stringConexao)
     {
         servicos.AddSingleton<InterceptadorSoftDelete>();
-        
+
         servicos.AddScoped<IRepositorioEntidade<Categoria>, CategoriaRepositorio>();
         servicos.AddScoped<IRepositorioEntidade<Usuario>, UsuarioRepositorio>();
         servicos.AddScoped<IRepositorioEntidade<Conta>, ContaRepositorio>();
+        servicos.AddScoped<IUnidadeTrabalho, UnidadeTrabalho>();
 
         servicos.AddDbContext<BDContexto>(
         (sp, options) => options

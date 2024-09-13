@@ -16,4 +16,8 @@
     <ProjectReference Include="..\CIFinance.Infra\CIFinance.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\Usuario\" />
+  </ItemGroup>
+
 </Project>

@@ -21,7 +21,7 @@ public class Usuario : Entidade
 
     protected Usuario() { } // requerido pelo entity framework
 
-    public Usuario(string nome, string email, string hashSenha, byte[] saltoSenha) : this(nome, email)
+    protected Usuario(string nome, string email, string hashSenha, byte[] saltoSenha) : this(nome, email)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hashSenha, nameof(hashSenha));
         if (saltoSenha.Length == 0) throw new ArgumentException(null, nameof(saltoSenha));
@@ -30,7 +30,7 @@ public class Usuario : Entidade
         SaltoSenha = saltoSenha;
     }
 
-    public Usuario(string nome, string email)
+    protected Usuario(string nome, string email)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(nome, nameof(nome));
         ArgumentException.ThrowIfNullOrWhiteSpace(email, nameof(email));
@@ -57,5 +57,18 @@ public class Usuario : Entidade
         }
         else
             throw new EntidadeInvalidaExcecao("Entidade especificada nao e do tipo Usuario", nameof(entidade));
+    }
+
+    public static class Fabrica
+    {
+        public static Usuario Criar(string nome, string email, string hashSenha, byte[] saltoSenha)
+        {
+            return new Usuario(nome, email, hashSenha, saltoSenha);
+        }
+
+        public static Usuario Criar(string nome, string email)
+        {
+            return new Usuario(nome, email);
+        }
     }
 }
