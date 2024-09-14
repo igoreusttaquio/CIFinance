@@ -5,15 +5,15 @@ using MediatR;
 
 namespace CIFinance.Aplicacao.Recursos.Usuarios.Comandos.AlterarSenhaUsuario;
 
-public class AlterarSenhaUsuarioComandoHandler(IRepositorioEntidade<Usuario> repositorioUsuario,
+public class AlterarSenhaUsuarioComandoHandler(IRepositorioUsuario repositorioUsuario,
     IServicoSenha senvicoSenha, IUnidadeTrabalho unidadeTrabalho) : IRequestHandler<AlterarSenhaUsuarioComando, Resultado<bool, Erro>>
 {
-    private readonly IRepositorioEntidade<Usuario> _repositorioUsuario = repositorioUsuario;
+    private readonly IRepositorioUsuario _repositorioUsuario = repositorioUsuario;
     private readonly IServicoSenha _senvicoSenha = senvicoSenha;
     private readonly IUnidadeTrabalho _unidadeTrabalho = unidadeTrabalho;
     public async Task<Resultado<bool, Erro>> Handle(AlterarSenhaUsuarioComando request, CancellationToken cancellationToken)
     {
-        if (await _repositorioUsuario.ObterAsync(request.IdentificadorExterno) is Usuario usuario)
+        if (await _repositorioUsuario.ObterPorIdAsync(request.IdentificadorExterno) is Usuario usuario)
         {
             var saltoSenha = usuario.SaltoSenha;
             var hashSenhaAntiga = _senvicoSenha.ComputarHash(saltoSenha, request.SenhaAntiga);

@@ -12,16 +12,14 @@ public static class InjecaoDependencia
     {
         servicos.AddSingleton<InterceptadorSoftDelete>();
 
-        servicos.AddScoped<IRepositorioEntidade<Categoria>, CategoriaRepositorio>();
-        servicos.AddScoped<IRepositorioEntidade<Usuario>, UsuarioRepositorio>();
-        servicos.AddScoped<IRepositorioEntidade<Conta>, ContaRepositorio>();
+        servicos.AddScoped(typeof(IRepositorioGenerico<>), typeof(RepositorioGenerico<>));
         servicos.AddScoped<IUnidadeTrabalho, UnidadeTrabalho>();
 
         servicos.AddDbContext<BDContexto>(
         (sp, options) => options
         //.UseSqlServer(stringConexao)
         .AddInterceptors(
-            sp.GetRequiredService<InterceptadorSoftDelete>()));
+            sp.GetRequiredService<InterceptadorSoftDelete>())); ;
 
         return servicos;
     }

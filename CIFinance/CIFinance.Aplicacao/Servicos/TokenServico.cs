@@ -7,7 +7,7 @@ namespace CIFinance.Aplicacao.Servicos;
 
 public class TokenServico : IToken
 {
-    public string GerarToken(ConfiguracaoToken configuracao, Claim[] claims)
+    public string GerarToken(IConfiguracaoToken configuracao, Claim[] claims)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var chave = Convert.FromBase64String(configuracao.ChaveSecreta);
@@ -15,7 +15,7 @@ public class TokenServico : IToken
         var descritorToken = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(configuracao.Timestamp / 60),
+            Expires = DateTime.UtcNow.AddMinutes(configuracao.Minutos),
             Audience = configuracao.Audiencia,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(chave), SecurityAlgorithms.HmacSha256Signature),
 
@@ -25,7 +25,7 @@ public class TokenServico : IToken
         return tokenHandler.WriteToken(token);
     }
 
-    public ClaimsPrincipal? ValidateToken(string token, ConfiguracaoToken configuracao)
+    public ClaimsPrincipal? ValidarToken(string token, IConfiguracaoToken configuracao)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Convert.FromBase64String(configuracao.ChaveSecreta);

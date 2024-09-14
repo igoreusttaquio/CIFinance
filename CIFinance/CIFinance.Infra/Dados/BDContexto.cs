@@ -5,6 +5,8 @@ namespace CIFinance.Infra.Dados;
 
 public class BDContexto : DbContext
 {
+
+    public BDContexto(DbContextOptions<BDContexto> options) : base(options) { }
     public DbSet<Categoria> Categorias { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Conta> Contas { get; set; }

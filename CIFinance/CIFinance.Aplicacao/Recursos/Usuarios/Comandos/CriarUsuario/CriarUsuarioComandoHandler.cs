@@ -6,10 +6,10 @@ using MediatR;
 namespace CIFinance.Aplicacao.Recursos.Usuarios.Comandos.CriarUsuario;
 
 // Cria um usuario e retorna o ID
-public class CriarUsuarioComandoHandler(IRepositorioEntidade<Usuario> usuarioRepositorio, IServicoSenha servicoSenha,
+public class CriarUsuarioComandoHandler(IRepositorioUsuario usuarioRepositorio, IServicoSenha servicoSenha,
     IUnidadeTrabalho unidadeTrabalho) : IRequestHandler<CriarUsuarioComando, Resultado<bool, Erro>>
 {
-    private readonly IRepositorioEntidade<Usuario> _repositorioUsuario = usuarioRepositorio;
+    private readonly IRepositorioUsuario _repositorioUsuario = usuarioRepositorio;
     private readonly IServicoSenha _servicoSenha = servicoSenha;
     private readonly IUnidadeTrabalho _unidadeTrabalho = unidadeTrabalho;
 

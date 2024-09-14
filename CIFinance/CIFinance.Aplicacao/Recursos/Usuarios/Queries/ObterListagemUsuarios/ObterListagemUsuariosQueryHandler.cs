@@ -4,9 +4,9 @@ using MediatR;
 
 namespace CIFinance.Aplicacao.Recursos.Usuarios.Queries.ObterListagemUsuarios;
 
-public class ObterListagemUsuariosQueryHandler(IRepositorioEntidade<Usuario> repositorioUsario) : IRequestHandler<ObterListagemUsuariosQuery, Resultado<ICollection<UsuarioModel>, Erro>>
+public class ObterListagemUsuariosQueryHandler(IRepositorioUsuario repositorioUsario) : IRequestHandler<ObterListagemUsuariosQuery, Resultado<ICollection<UsuarioModel>, Erro>>
 {
-    private readonly IRepositorioEntidade<Usuario> _repositorioUsuario = repositorioUsario;
+    private readonly IRepositorioUsuario _repositorioUsuario = repositorioUsario;
     public async Task<Resultado<ICollection<UsuarioModel>, Erro>> Handle(ObterListagemUsuariosQuery request, CancellationToken cancellationToken)
     {
         if (await _repositorioUsuario.ObterTodosAsync() is ICollection<Usuario> usuarios)

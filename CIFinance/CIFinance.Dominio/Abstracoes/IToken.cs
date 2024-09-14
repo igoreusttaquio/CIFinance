@@ -3,6 +3,6 @@ namespace CIFinance.Dominio.Abstracoes;
 
 public interface IToken
 {
-    string GerarToken(ConfiguracaoToken configuracao, Claim[] claims);
-    ClaimsPrincipal? ValidateToken(string token, ConfiguracaoToken configuracao);
+    string GerarToken(IConfiguracaoToken configuracao, Claim[] claims);
+    ClaimsPrincipal? ValidarToken(string token, IConfiguracaoToken configuracao);
 }
