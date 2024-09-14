@@ -128,5 +128,17 @@ namespace CIFinance.Testes.Repositorios
             Assert.True(registoExcluido);
         }
 
+        [Fact]
+        public async void ObterTodosUsuario_RetornaListaUsuarios()
+        {
+            // act 
+            var usuarios = await _usuarioRepositorio.ObterTodosAsync();
+
+
+            // assert
+            Assert.NotNull(usuarios);
+            Assert.True(usuarios is not null and IEnumerable<Usuario>);
+        }
+
     }
 }
