@@ -14,7 +14,7 @@ public class Categoria : Entidade
 
     [Required]
     [MaxLength(50)]
-    [AllowedValues(nameof(Enumeradores.Tipo.Receita), nameof(Enumeradores.Tipo.Receita))]
+    [AllowedValues(nameof(Enumeradores.Tipo.Receita), nameof(Enumeradores.Tipo.Despesa))]
     public string Tipo { get; private set; } = null!;
     public Usuario Usuario { get; private set; } = null!;
 

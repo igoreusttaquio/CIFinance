@@ -23,7 +23,7 @@ public class Transacao : Entidade
 
     [Required]
     [MaxLength(50)]
-    [AllowedValues(nameof(Enumeradores.Tipo.Receita), nameof(Enumeradores.Tipo.Receita))]
+    [AllowedValues(nameof(Enumeradores.Tipo.Receita), nameof(Enumeradores.Tipo.Despesa))]
     public string Tipo { get; private set; } = null!;
 
     protected Transacao() { } // Requerido por causa do entity framework
