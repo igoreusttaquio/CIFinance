@@ -95,5 +95,38 @@ namespace CIFinance.Testes.Repositorios
             Assert.NotNull(usuario);
             Assert.Equal(_outroNome, usuario.Nome);
         }
+
+        [Fact]
+        public async void CriarUsuario_RetornaUsuario()
+        {
+            // act 
+            var usuario = Usuario.Fabrica.Criar(_outroNome, _outroEmail);
+
+            await _usuarioRepositorio.CriarAsync(usuario);
+            await _contexto.SaveChangesAsync();
+
+            // assert
+            Assert.NotNull(await _usuarioRepositorio.ObterPorIdAsync(usuario.IdentificadorExterno));
+            Assert.Equal(_outroNome, usuario.Nome);
+        }
+
+        [Fact]
+        public async void ExcluirUsuario_RetornaVerdadeiro()
+        {
+            // act 
+            var usuario = await _usuarioRepositorio.ObterPorIdAsync(_idUsuario);
+            bool registoExcluido = false;
+
+            if(usuario is not null)
+            {
+                _usuarioRepositorio.Excluir(usuario);
+                registoExcluido = await _contexto.SaveChangesAsync() > 0;
+            }
+
+            // assert
+            Assert.Null(await _usuarioRepositorio.ObterPorIdAsync(_idUsuario));
+            Assert.True(registoExcluido);
+        }
+
     }
 }
