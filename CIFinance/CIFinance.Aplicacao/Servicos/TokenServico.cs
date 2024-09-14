@@ -1,4 +1,4 @@
-﻿using CIFinance.Dominio.Abstracoes;
+﻿using CIFinance.Aplicacao.Abstracoes;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,37 +18,53 @@ public class TokenServico : IToken
             Expires = DateTime.UtcNow.AddMinutes(configuracao.Minutos),
             Audience = configuracao.Audiencia,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(chave), SecurityAlgorithms.HmacSha256Signature),
-
+            Issuer = configuracao.Emissor
         };
 
         var token = tokenHandler.CreateToken(descritorToken);
         return tokenHandler.WriteToken(token);
     }
 
-    public ClaimsPrincipal? ValidarToken(string token, IConfiguracaoToken configuracao)
+    public (ClaimsPrincipal Identidades, SecurityToken TokenValidado)? ValidarToken(string token, IConfiguracaoToken configuracao)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Convert.FromBase64String(configuracao.ChaveSecreta);
+        byte[] chaveBytes = Convert.FromBase64String(configuracao.ChaveSecreta);
+
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuracao.Emissor,
+            ValidAudience = configuracao.Audiencia,
+            IssuerSigningKey = new SymmetricSecurityKey(chaveBytes),
+            ClockSkew = TimeSpan.Zero // Opicional: Setar para zero previne problemas de clock skew 
+        };
 
         try
         {
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = configuracao.Emissor,
-                ValidAudience = configuracao.Audiencia,
-                IssuerSigningKey = new SymmetricSecurityKey(key)
-            };
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken tokenValidado);
 
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-            return principal;
+            // verificacoes adicionais podem vir aqui
+
+            return (principal, tokenValidado);
         }
-        catch
+        catch (SecurityTokenExpiredException)
         {
+            // gerenciar expiracao de token
+            return null;
+        }
+        catch (SecurityTokenInvalidSignatureException)
+        {
+            // Gerenciar assinatura invalida do token
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // logar exceptions
             return null;
         }
     }
+
 }

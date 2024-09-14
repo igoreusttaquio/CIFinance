@@ -1,4 +1,6 @@
-﻿namespace CIFinance.Dominio.Abstracoes;
+﻿using CIFinance.Aplicacao.Abstracoes;
+
+namespace CIFinance.Aplicacao;
 
 public sealed record ConfiguracaoToken : IConfiguracaoToken
 {

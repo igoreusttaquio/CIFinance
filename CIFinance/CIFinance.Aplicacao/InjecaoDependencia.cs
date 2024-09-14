@@ -1,23 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace CIFinance.Aplicacao;
 
 public static class InjecaoDependencia
 {
-    public static IServiceCollection AdicionarAplicacao(this IServiceCollection servicos)
-    {
-        servicos.AddMediatR(configuracoes =>
-        {
-            configuracoes.RegisterServicesFromAssembly(typeof(InjecaoDependencia).Assembly);// talvez precise ser a Program...
-        });
-        return servicos;
-    }
 
-    public static IServiceCollection AdicionarAplicacao(this IServiceCollection servicos, Type tipo)
+    public static IServiceCollection AdicionarAplicacao(this IServiceCollection servicos, Assembly assembly)
     {
         servicos.AddMediatR(configuracoes =>
         {
-            configuracoes.RegisterServicesFromAssembly(tipo.Assembly);
+            configuracoes.RegisterServicesFromAssembly(assembly);
         });
         return servicos;
     }

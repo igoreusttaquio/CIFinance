@@ -1,6 +1,4 @@
-﻿using CIFinance.Dominio.Abstracoes;
-
-namespace CIFinance.Aplicacao.Abstracoes;
+﻿namespace CIFinance.Aplicacao.Abstracoes;
 
 public interface IServicoUsuario
 {

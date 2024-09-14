@@ -1,4 +1,4 @@
-﻿namespace CIFinance.Dominio.Abstracoes;
+﻿namespace CIFinance.Aplicacao.Abstracoes;
 
 public interface IConfiguracaoToken
 {

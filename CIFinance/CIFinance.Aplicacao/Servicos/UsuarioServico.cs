@@ -1,5 +1,4 @@
 ﻿using CIFinance.Aplicacao.Abstracoes;
-using CIFinance.Dominio.Abstracoes;
 
 namespace CIFinance.Aplicacao.Servicos;
 

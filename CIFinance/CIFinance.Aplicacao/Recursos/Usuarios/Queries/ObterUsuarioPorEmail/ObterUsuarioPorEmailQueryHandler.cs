@@ -2,7 +2,7 @@
 using CIFinance.Dominio.Entidades;
 using MediatR;
 
-namespace CIFinance.Aplicacao.Recursos.Usuarios.Queries.UbterUsuarioPorEmail;
+namespace CIFinance.Aplicacao.Recursos.Usuarios.Queries.ObterUsuarioPorEmail;
 
 public class ObterUsuarioPorEmailQueryHandler(IRepositorioUsuario repositorio) : IRequestHandler<ObterUsuarioPorEmailQuery, Resultado<UsuarioModel, Erro>>
 {
