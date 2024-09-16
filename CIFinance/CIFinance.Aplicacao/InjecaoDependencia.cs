@@ -4,7 +4,6 @@ using CIFinance.Aplicacao.Servicos;
 using CIFinance.Dominio.Abstracoes;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace CIFinance.Aplicacao;
 

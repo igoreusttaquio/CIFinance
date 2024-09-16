@@ -10,6 +10,7 @@ public class Conta : Entidade
     [Required]
     [MaxLength(100)]
     public string Nome { get; private set; } = null!;
+    [DataType(DataType.Currency)]
     public decimal Saldo { get; private set; }
     public Usuario Usuario { get; private set; } = null!;
 

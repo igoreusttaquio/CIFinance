@@ -8,6 +8,7 @@ public class Transferencia : Entidade
 {
     public Usuario Usuario { get; private set; } = null!;
     public Categoria Categoria { get; private set; } = null!;
+    [DataType(DataType.Currency)]
     public decimal Valor { get; private set; }
     public DateTime Data { get; private set; } = DateTime.UtcNow;
     [Required]

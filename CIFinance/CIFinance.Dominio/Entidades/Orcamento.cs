@@ -1,4 +1,5 @@
 ﻿using CIFinance.Dominio.Excecoes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CIFinance.Dominio.Entidades;
@@ -8,6 +9,7 @@ public class Orcamento : Entidade
 {
     public Usuario Usuario { get; private set; } = null!;
     public Categoria Categoria { get; private set; } = null!;
+    [DataType(DataType.Currency)]
     public decimal Valor { get; private set; }
     public DateTime DataInicio { get; private set; } = DateTime.UtcNow;
     public DateTime DataFim { get; private set; } = DateTime.UtcNow;

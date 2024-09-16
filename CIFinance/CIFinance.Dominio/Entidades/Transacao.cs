@@ -16,6 +16,7 @@ public class Transacao : Entidade
     public string Descricao { get; private set; } = null!;
 
     [Required]
+    [DataType(DataType.Currency)]
     public decimal Valor { get; private set; } = 0m;
 
     [Required]
