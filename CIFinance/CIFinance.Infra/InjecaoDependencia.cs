@@ -2,6 +2,7 @@
 using CIFinance.Dominio.Entidades;
 using CIFinance.Infra.Dados;
 using CIFinance.Infra.Repositorio;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CIFinance.Infra;
@@ -10,16 +11,16 @@ public static class InjecaoDependencia
 {
     public static IServiceCollection AdicionarInfraestrutura(this IServiceCollection servicos, string stringConexao)
     {
-        servicos.AddSingleton<InterceptadorSoftDelete>();
+
+        servicos.AddScoped<InterceptadorSoftDelete>();
+
+        servicos.AddDbContext<DbContext, BDContexto>((serviceProvider, options) =>
+            options.UseInMemoryDatabase("TestDatabase")  // UseSqlServer(connectionString) para producao
+                   .AddInterceptors(serviceProvider.GetRequiredService<InterceptadorSoftDelete>()));
 
         servicos.AddScoped(typeof(IRepositorioGenerico<>), typeof(RepositorioGenerico<>));
+        servicos.AddScoped<IRepositorioUsuario, UsuarioRepositorio>();
         servicos.AddScoped<IUnidadeTrabalho, UnidadeTrabalho>();
-
-        servicos.AddDbContext<BDContexto>(
-        (sp, options) => options
-        //.UseSqlServer(stringConexao)
-        .AddInterceptors(
-            sp.GetRequiredService<InterceptadorSoftDelete>())); ;
 
         return servicos;
     }

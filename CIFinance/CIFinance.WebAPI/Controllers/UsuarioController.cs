@@ -1,6 +1,7 @@
 ﻿using CIFinance.Aplicacao.Recursos.Usuarios;
 using CIFinance.Aplicacao.Recursos.Usuarios.Comandos.CriarUsuario;
-using CIFinance.Aplicacao.Recursos.Usuarios.Queries.UbterUsuarioPorEmail;
+using CIFinance.Aplicacao.Recursos.Usuarios.Queries.ObterUsuarioPorEmail;
+using CIFinance.WebAPI.Contratos.Usuario;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,28 +14,31 @@ namespace CIFinance.WebAPI.Controllers
         private readonly ISender _sender = sender;
 
         [HttpPost]
-        [Route("criar-usuario")]
-        public async Task<IActionResult> CriarUsuario(CriarUsuarioComando comando)
+        public async Task<IActionResult> CriarUsuario([FromBody] UsuarioRequest usuario)
         {
+            var comando = new CriarUsuarioComando(usuario.Nome, usuario.Email, usuario.Senha);
             var resultado = await _sender.Send(comando);
 
-            // se nao usar o implicit operator para fazer o cast... Seria um codigo tedioso
-            // Match(resultadoValor => (Resultado<bool, Erro>)resultadoValor, erro => ((Resultado<bool, Erro>))erro);
-            resultado.Match(resultadoValor => resultadoValor, erro => erro);
-            if (resultado.Erro is not null)
+            return resultado.Exitou switch
             {
-                return BadRequest();
-            }
-
-            return Ok();
+                true => Ok(resultado.Valor),
+                _ => Problem(resultado?.Erro?.Mensagem)
+            };
         }
 
-        [HttpGet("{email}")]
-        [Route("obter-usuario/email")]
+        [HttpGet("por-email/{email}")]
+        [ProducesResponseType(typeof(UsuarioResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+
         public async Task<ActionResult<UsuarioModel>> ObterUsuarioPorEmail(string email)
         {
-            var query = new ObterUsuarioPorEmailQuery(email);
-            return Ok(await _sender.Send(query));
+            var resultado = await _sender.Send(new ObterUsuarioPorEmailQuery(email));
+            if (resultado.Falhou)
+            {
+                return Problem(resultado?.Erro?.Mensagem, statusCode: StatusCodes.Status404NotFound);
+            }
+
+            return Ok(new UsuarioResponse(resultado.Valor));
         }
     }
 }
