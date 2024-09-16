@@ -1,7 +1,7 @@
 ﻿using CIFinance.Dominio.Abstracoes;
 using CIFinance.Dominio.Entidades;
 using CIFinance.Infra.Dados;
-using CIFinance.Infra.Repositorio;
+using CIFinance.Infra.Repositorios;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

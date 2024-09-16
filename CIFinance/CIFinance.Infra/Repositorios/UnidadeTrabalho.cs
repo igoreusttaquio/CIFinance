@@ -1,7 +1,7 @@
 ﻿using CIFinance.Dominio.Abstracoes;
 using CIFinance.Infra.Dados;
 
-namespace CIFinance.Infra.Repositorio;
+namespace CIFinance.Infra.Repositorios;
 
 public class UnidadeTrabalho(BDContexto bDContexto) : IUnidadeTrabalho
 {

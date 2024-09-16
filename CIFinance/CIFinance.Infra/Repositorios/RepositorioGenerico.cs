@@ -1,7 +1,7 @@
 ﻿using CIFinance.Dominio.Abstracoes;
 using Microsoft.EntityFrameworkCore;
 
-namespace CIFinance.Infra.Repositorio;
+namespace CIFinance.Infra.Repositorios;
 
 public class RepositorioGenerico<T>(DbContext contexto) : IRepositorioGenerico<T> where T : class, IEntidade
 {

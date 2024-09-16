@@ -2,7 +2,7 @@
 using CIFinance.Dominio.Entidades;
 using Microsoft.EntityFrameworkCore;
 
-namespace CIFinance.Infra.Repositorio;
+namespace CIFinance.Infra.Repositorios;
 
 public class UsuarioRepositorio(DbContext contexto) : RepositorioGenerico<Usuario>(contexto), IRepositorioUsuario
 {
