@@ -6,12 +6,12 @@ using MediatR;
 namespace CIFinance.Aplicacao.Recursos.Usuarios.Comandos.AlterarSenhaUsuario;
 
 public class AlterarSenhaUsuarioComandoHandler(IRepositorioUsuario repositorioUsuario,
-    IServicoSenha senvicoSenha, IUnidadeTrabalho unidadeTrabalho) : IRequestHandler<AlterarSenhaUsuarioComando, Resultado<bool, Erro>>
+    IServicoSenha senvicoSenha, IUnidadeTrabalho unidadeTrabalho) : IRequestHandler<AlterarSenhaUsuarioComando, Resultado<bool>>
 {
     private readonly IRepositorioUsuario _repositorioUsuario = repositorioUsuario;
     private readonly IServicoSenha _senvicoSenha = senvicoSenha;
     private readonly IUnidadeTrabalho _unidadeTrabalho = unidadeTrabalho;
-    public async Task<Resultado<bool, Erro>> Handle(AlterarSenhaUsuarioComando request, CancellationToken cancellationToken)
+    public async Task<Resultado<bool>> Handle(AlterarSenhaUsuarioComando request, CancellationToken cancellationToken)
     {
         if (await _repositorioUsuario.ObterPorIdAsync(request.IdentificadorExterno) is Usuario usuario)
         {
@@ -21,7 +21,7 @@ public class AlterarSenhaUsuarioComandoHandler(IRepositorioUsuario repositorioUs
 
             if (hashSenhaAntiga.Equals(hashSenhaNova) is false)
             {
-                return (Resultado<bool, Erro>)UsuarioErros.SenhasNaoCombinam;
+                return UsuarioErros.SenhasNaoCombinam;
             }
 
             var novoHash = _senvicoSenha.GerarHashSenha(request.SenhaNova, out byte[] novoSalto);
@@ -31,11 +31,9 @@ public class AlterarSenhaUsuarioComandoHandler(IRepositorioUsuario repositorioUs
 
             _repositorioUsuario.Atualizar(usuario);
             await _unidadeTrabalho.SalvarAsync();
-
-            return (Resultado<bool, Erro>)true;
+            return true;
         }
 
-        return (Resultado<bool, Erro>)UsuarioErros.UsuarioNaoEncontrado;
-
+        return UsuarioErros.UsuarioNaoEncontrado;
     }
 }

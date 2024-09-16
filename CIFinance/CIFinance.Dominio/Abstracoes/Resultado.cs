@@ -1,42 +1,44 @@
-﻿using System.Drawing;
+﻿namespace CIFinance.Dominio.Abstracoes;
 
-namespace CIFinance.Dominio.Abstracoes;
-
-public class Resultado<Tvalor, TErro>
+public class Resultado<T>
 {
-    public readonly Tvalor? Valor;
-    public readonly TErro? Erro;
+    private readonly T? _valor;
+    public bool Exitou { get; }
+    public bool Falhou => !Exitou;
 
-    private bool _sucesso;
+    public Erro? Erro { get; }
 
-    private Resultado(Tvalor valor)
+    public T Valor
     {
-        _sucesso = true;
-        Valor = valor;
-        Erro = default;
+        get
+        {
+            if (Falhou)
+                throw new InvalidOperationException("Valor invalido para o estado atual do objeto");
+
+            return _valor!;
+        }
+
+        init { _valor = value; }
+
     }
 
-    private Resultado(TErro erro)
+    private Resultado(Erro erro)
     {
-        _sucesso = false;
-        Valor = default;
+        Exitou = false;
         Erro = erro;
     }
 
-    // Caminho feliz
-    public static implicit operator Resultado<Tvalor, TErro>(Tvalor valor) => new(valor);
-
-    // Caminho do erro
-    public static implicit operator Resultado<Tvalor, TErro>(TErro erro) => new(erro);
-
-
-    public Resultado<Tvalor, TErro> Match(Func<Tvalor, Resultado<Tvalor, TErro>> sucesso, Func<TErro, Resultado<Tvalor, TErro>> falha)
+    private Resultado(T valor)
     {
-        if (_sucesso)
-        {
-            return sucesso(Valor!);
-        }
-        return falha(Erro!);
+        Valor = valor;
+        Erro = null;
+        Exitou = true;
     }
+
+    public static implicit operator Resultado<T>(T valor) => new(valor);
+    public static implicit operator Resultado<T>(Erro erro) => new(erro);
+
+    public static Resultado<T> Sucesso(T valor) => new(valor);
+    public static Resultado<T> Falha(Erro erro) => new(erro);
 
 }

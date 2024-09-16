@@ -3,4 +3,4 @@ using MediatR;
 
 namespace CIFinance.Aplicacao.Recursos.Usuarios.Queries.ObterListagemUsuarios;
 
-public class ObterListagemUsuariosQuery : IRequest<Resultado<ICollection<UsuarioModel>, Erro>>;
+public class ObterListagemUsuariosQuery : IRequest<Resultado<ICollection<UsuarioModel>>>;
